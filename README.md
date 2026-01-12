@@ -1,6 +1,10 @@
 # DocMind — AI-Powered Document & Knowledge Base Chat
 
-A production-ready RAG (Retrieval-Augmented Generation) system for chatting with your documents using GPT-4o with source citations.
+A RAG (Retrieval-Augmented Generation) system for chatting with your documents using GPT-4o, with source citations on every answer.
+
+**Stack:** FastAPI, Celery and async SQLAlchemy on PostgreSQL + pgvector, LangChain (`RecursiveCharacterTextSplitter` chunking and the retrieval chain in `backend/app/rag/`), a Node/Express gateway, and a React 18 + TypeScript front end streaming over SSE.
+
+**Status:** portfolio project, runnable locally with Docker Compose. There is no automated test suite or CI yet.
 
 ## Architecture
 
@@ -48,8 +52,8 @@ A production-ready RAG (Retrieval-Augmented Generation) system for chatting with
 ### 1. Clone and configure
 
 ```bash
-git clone https://github.com/your-org/docmind.git
-cd docmind
+git clone https://github.com/FaseehUllahJafar/DocMind.git
+cd DocMind
 cp .env.example .env
 # Edit .env with your OpenAI API key, Stripe keys, etc.
 ```
@@ -144,7 +148,9 @@ DocMind/
 └── docker-compose.dev.yml
 ```
 
-## Plans
+## Usage tiers
+
+Plan limits are enforced in `backend/app/services/billing_service.py` (query quota checked before each chat request) and upgrades go through Stripe Checkout with a verified webhook.
 
 | Plan | Price | Docs | Queries/mo |
 |------|-------|------|------------|
@@ -154,4 +160,4 @@ DocMind/
 
 ## License
 
-MIT
+MIT, see [LICENSE](LICENSE).
