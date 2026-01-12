@@ -9,8 +9,6 @@ import { logger } from '@/utils/logger'
 export const sseProxy = createProxyMiddleware({
   target: env.FASTAPI_URL,
   changeOrigin: true,
-  // Disable compression so SSE events aren't held in gzip buffer
-  compress: false,
   on: {
     proxyReq: (proxyReq, req) => {
       // Signal to FastAPI that the client accepts SSE
@@ -25,7 +23,7 @@ export const sseProxy = createProxyMiddleware({
     },
     error: (err, req, res) => {
       logger.error({ err }, 'SSE proxy error')
-      if (!res.headersSent) {
+      if ('headersSent' in res && !res.headersSent) {
         (res as import('http').ServerResponse).writeHead(502, { 'Content-Type': 'text/event-stream' })
         ;(res as import('http').ServerResponse).end(
           'data: {"type":"error","message":"Backend unavailable"}\n\n',

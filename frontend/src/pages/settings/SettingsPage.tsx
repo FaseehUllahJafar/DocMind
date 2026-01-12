@@ -109,7 +109,7 @@ export function SettingsPage() {
               <Button
                 type="submit"
                 disabled={!isDirty || updateProfile.isPending}
-                isLoading={updateProfile.isPending}
+                loading={updateProfile.isPending}
               >
                 Save Changes
               </Button>

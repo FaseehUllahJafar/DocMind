@@ -1,5 +1,5 @@
 import rateLimit from 'express-rate-limit'
-import { RedisStore } from 'rate-limit-redis'
+import { RedisStore, type RedisReply } from 'rate-limit-redis'
 import { redis } from '@/config/redis'
 import { env } from '@/config/env'
 
@@ -14,7 +14,7 @@ export const rateLimiter = rateLimit({
     return authReq.user?.sub ?? req.ip ?? 'unknown'
   },
   store: new RedisStore({
-    sendCommand: (...args: string[]) => redis.call(...args) as Promise<number>,
+    sendCommand: (command: string, ...args: string[]) => redis.call(command, ...args) as Promise<RedisReply>,
   }),
   handler: (_req, res) => {
     res.status(429).json({
@@ -30,7 +30,7 @@ export const authRateLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   store: new RedisStore({
-    sendCommand: (...args: string[]) => redis.call(...args) as Promise<number>,
+    sendCommand: (command: string, ...args: string[]) => redis.call(command, ...args) as Promise<RedisReply>,
     prefix: 'rl:auth:',
   }),
   handler: (_req, res) => {

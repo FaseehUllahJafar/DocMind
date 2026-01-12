@@ -14,7 +14,7 @@ export const fastapiProxy = createProxyMiddleware({
   on: {
     error: (err, req, res) => {
       logger.error({ err, url: (req as { url?: string }).url }, 'Proxy error')
-      if (!res.headersSent) {
+      if ('headersSent' in res && !res.headersSent) {
         (res as import('http').ServerResponse).writeHead(502, { 'Content-Type': 'application/json' })
         ;(res as import('http').ServerResponse).end(
           JSON.stringify({ error: { code: 'BAD_GATEWAY', message: 'Backend unavailable' } }),
